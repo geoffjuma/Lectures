@@ -3,23 +3,21 @@ import java.util.Scanner;
 public class StrathmoreAtm
 {
 	public static Scanner myscanner = new Scanner(System.in);
-	private double balance;
+	private static double balance;
 	private final static int pin =1234; 
 
-	StrathmoreAtm(double balance)
+	StrathmoreAtm()
 	{
 		this.balance = balance;
 
 	}
 	public double depositMoney(double amount)
 	{
-		balance +=amount;
-		return balance;
+		return balance +=amount;
 	}
 	public double withdrawMoney(double amount)
 	{
-		balance -=amount;
-		return balance;
+		return balance -=amount;
 	}
 	public double getBalance()
 	{
@@ -54,7 +52,7 @@ public class StrathmoreAtm
 
 	public static void getOptions()
 	{
-		StrathmoreAtm myAtm = new StrathmoreAtm(20000.00);
+		StrathmoreAtm myAtm = new StrathmoreAtm();
 		System.out.println(	"[a] To READ your current balance:");
 		System.out.println(	"[b] To DEPOSIT money into the account");
 		System.out.println(	"[c] To WITHDRAW money from the account");
@@ -65,27 +63,40 @@ public class StrathmoreAtm
 				switch (options)
 				{
 					case 'a':
-					myAtm.balance = myAtm.getBalance();
+					balance = myAtm.getBalance();
 					System.out.printf("You have %,.2f ! \n",myAtm.balance);
 					break;
 					case 'b':
-					System.out.print("Please enter the amount to be desposited: ");
-					double amount = myscanner.nextDouble();
-					myAtm.balance = myAtm.depositMoney(amount);
-					System.out.printf("You have deposited %,.2f in your account! Your new balance is %,.2f \n",amount,myAtm.balance);
+					try
+					{
+						System.out.print("Please enter the amount to be desposited: ");
+						double amount = myscanner.nextDouble();
+						myAtm.balance = myAtm.depositMoney(amount);
+						System.out.printf("You have deposited %,.2f in your account! Your new balance is %,.2f \n",amount,myAtm.balance);	
+					} catch (Exception e)
+					{
+						System.out.println("You have an error "+e);
+					}
+					
 					break;
 					case 'c':
-					System.out.print("Please enter the amount to be withdrawn: ");
-					double withdaw = myscanner.nextDouble();
-					if (myAtm.balance<withdaw)
+					try
 					{
-						System.out.println("Sorry!, You have insufficient balance!");
-						System.out.println("Your balance is " +myAtm.getBalance());
-					}
-					else
+						System.out.print("Please enter the amount to be withdrawn: ");
+						double withdaw = myscanner.nextDouble();	
+						if (myAtm.balance<withdaw)
+						{
+							System.out.println("Sorry!, You have insufficient funds in your account!");
+							System.out.printf("Your balance is %,.2f \n ",balance);
+						}
+						else
+						{
+							myAtm.balance = myAtm.withdrawMoney(withdaw);
+							System.out.printf("You have dwithdrawn %,.2f in your account! Your new balance is %,.2f \n",withdaw,myAtm.balance);
+						}
+					} catch (Exception e)
 					{
-						myAtm.balance = myAtm.withdrawMoney(withdaw);
-						System.out.printf("You have dwithdrawn %,.2f in your account! Your new balance is %,.2f \n",withdaw,myAtm.balance);
+						System.out.println("Expecting an integer or float here "+e);
 					}
 				
 					break;
@@ -108,7 +119,11 @@ public class StrathmoreAtm
 		///int counter = 2;
 			if(getPin()==pin)
 				{
-					getOptions();
+					while (true)
+					{
+						getOptions();	
+					}
+					
 				}
 			else 
 			{
